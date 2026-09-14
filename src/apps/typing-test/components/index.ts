@@ -1,5 +1,0 @@
-export * from './Result'
-export * from './StickyNote'
-export * from './Timer'
-export * from './TypingArea'
-export * from './WavyText'
