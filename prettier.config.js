@@ -3,6 +3,7 @@ export default {
   singleQuote: true,
   jsxSingleQuote: true,
   bracketSameLine: true,
+  trailingComma: 'all',
 
   plugins: ['prettier-plugin-tailwindcss'],
   tailwindStylesheet: './src/main.css',

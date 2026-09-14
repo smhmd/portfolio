@@ -6,7 +6,7 @@
       "request": "launch",
       "name": "Launch in integrated browser",
       "url": "http://localhost:5173",
-      "preLaunchTask": "dev",
+      "preLaunchTask": "dev"
     }
   ]
 }

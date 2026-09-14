@@ -1,23 +1,31 @@
-import pluginJs from '@eslint/js'
-import eslintPluginPrettier from 'eslint-plugin-prettier/recommended'
-import pluginReact from 'eslint-plugin-react'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import javascript from '@eslint/js'
+import prettier from 'eslint-plugin-prettier/recommended'
+import react from 'eslint-plugin-react'
+import refresh from 'eslint-plugin-react-refresh'
+import sort from 'eslint-plugin-simple-import-sort'
 import globals from 'globals'
-import tseslint from 'typescript-eslint'
+import typescript from 'typescript-eslint'
+
+const prettierNoFix = {
+  ...prettier.rules.prettier,
+  meta: {
+    ...prettier.rules.prettier.meta,
+    fixable: undefined,
+  },
+}
 
 /** @type {import('eslint').Linter.Config[]} */
 const config = [
   { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
   { languageOptions: { globals: globals.browser } },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
-  reactRefresh.configs.recommended,
-  eslintPluginPrettier,
+  javascript.configs.recommended,
+  ...typescript.configs.recommended,
+  react.configs.flat.recommended,
+  refresh.configs.recommended,
+  prettierNoFix,
   {
     plugins: {
-      'simple-import-sort': simpleImportSort,
+      'simple-import-sort': sort,
     },
     settings: {
       react: {
@@ -75,7 +83,9 @@ const config = [
             'links',
             'headers',
             'loader',
+            'clientLoader',
             'action',
+            'clientAction',
             'metadata',
           ],
           allowConstantExport: true,

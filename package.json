@@ -1,5 +1,5 @@
 {
-  "name": "portfolio-os",
+  "name": "portfolio",
   "private": true,
   "type": "module",
   "sideEffects": false,
@@ -24,7 +24,6 @@
     "@react-three/fiber": "^9.4.2",
     "@react-three/postprocessing": "^3.0.4",
     "@react-three/rapier": "^2.2.0",
-    "@web-kits/audio": "^0.1.0",
     "@xstate/react": "^5.0.5",
     "clsx": "^2.1.1",
     "isbot": "^5.1.32",

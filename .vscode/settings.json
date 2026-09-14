@@ -58,13 +58,6 @@
       "rootFolderNames": ["apps"]
     },
     {
-      "name": "typing-test",
-      "base": "font",
-      "color": "blue-gray-700",
-      "folderNames": ["typing-test"],
-      "rootFolderNames": ["apps"]
-    },
-    {
       "name": "home-application",
       "base": "home",
       "color": "blue-gray-700",
