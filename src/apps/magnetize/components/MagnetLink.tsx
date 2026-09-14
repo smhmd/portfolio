@@ -2,7 +2,7 @@ import React, { useId, useState } from 'react'
 
 import clsx from 'clsx'
 
-import { Check, Copy, Link } from 'src/assets'
+import { Check, Copy, Link } from 'src/icons'
 
 interface MagnetLinkProps {
   link: string

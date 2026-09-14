@@ -1,7 +1,7 @@
 import { Dialog } from '@base-ui/react/dialog'
 import clsx from 'clsx'
 
-import { Close } from 'src/assets'
+import { Close } from 'src/icons'
 import type { Props } from 'src/lib/types'
 
 type ControlProps = Props<'span', { name: string; value?: React.ReactNode }>

@@ -4,7 +4,7 @@ import { Checkbox } from '@base-ui/react/checkbox'
 import { CheckboxGroup } from '@base-ui/react/checkbox-group'
 import clsx from 'clsx'
 
-import { Check } from 'src/assets'
+import { Check } from 'src/icons'
 
 import { FILE_LIMIT, formatBytes } from '../lib'
 import { Alert } from './Alert'

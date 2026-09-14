@@ -3,7 +3,7 @@ import { memo, useId, useMemo } from 'react'
 import { Accordion } from '@base-ui/react/accordion'
 import clsx from 'clsx'
 
-import { ArrowDown, Settings } from 'src/assets'
+import { ArrowDown, Settings } from 'src/icons'
 
 import { type Options, type TorrentObject } from '../lib'
 import { FileSelector } from './FileSelector'

@@ -2,7 +2,7 @@ import { memo, useRef, useState } from 'react'
 
 import clsx from 'clsx'
 
-import { Close, FilePresent, Upload } from 'src/assets'
+import { Close, FilePresent, Upload } from 'src/icons'
 
 import { fileToArrayBuffer, type TorrentObject } from '../lib'
 

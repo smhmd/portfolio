@@ -1,10 +1,12 @@
 /**
+ * Icons:
  * {@link https://icon-sets.iconify.design/ic/}
  */
 
 export { default as Github } from './github.svg?react'
 export { default as Grid } from './grid.svg?react'
 export { default as Hexagon } from './hexagon.svg?react'
+export * from './instruments'
 export { default as LinkedIn } from './linkedin.svg?react'
 export { default as Pattern } from './pattern.svg?react'
 export { default as Twitter } from './twitter.svg?react'
@@ -24,7 +26,7 @@ export { default as Info } from '@material-icons/svg/svg/info/round.svg?react'
 export { default as ArrowDown } from '@material-icons/svg/svg/keyboard_arrow_down/round.svg?react'
 export { default as Link } from '@material-icons/svg/svg/link/round.svg?react'
 export { default as Mail } from '@material-icons/svg/svg/mail/round.svg?react'
-export { default as MusicNote } from '@material-icons/svg/svg/music_note/round.svg?react'
+export { default as LinkExternal } from '@material-icons/svg/svg/open_in_new/round.svg?react'
 export { default as Play } from '@material-icons/svg/svg/play_arrow/baseline.svg?react'
 export { default as Replay } from '@material-icons/svg/svg/replay/round.svg?react'
 export { default as AlertOctagon } from '@material-icons/svg/svg/report/round.svg?react'
@@ -34,4 +36,5 @@ export { default as Search } from '@material-icons/svg/svg/search/round.svg?reac
 export { default as Settings } from '@material-icons/svg/svg/settings/round.svg?react'
 export { default as SpaceBar } from '@material-icons/svg/svg/space_bar/round.svg?react'
 export { default as Square } from '@material-icons/svg/svg/square/round.svg?react'
+export { default as Back } from '@material-icons/svg/svg/subdirectory_arrow_left/round.svg?react'
 export { default as Upload } from '@material-icons/svg/svg/upload_file/round.svg?react'
