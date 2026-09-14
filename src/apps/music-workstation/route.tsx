@@ -1,3 +1,4 @@
+import { Container } from 'src/components'
 import {
   ArrowLeft,
   ArrowRight,
@@ -8,12 +9,11 @@ import {
   Hexagon,
   Pattern,
   Play,
-  Replay,
   SpaceBar,
   Square,
-} from 'src/assets'
-import { Container } from 'src/components'
-import { generateMeta, iconToFavicon } from 'src/lib/server'
+} from 'src/icons'
+import { SAMPLES_PREFETCH } from 'src/lib/samples'
+import { generateHead } from 'src/lib/server'
 
 import {
   Button,
@@ -28,16 +28,12 @@ import { api } from './lib'
 import { AppIcon, metadata } from './metadata'
 import styles from './styles.css?url'
 
-export function meta() {
-  return generateMeta(metadata)
-}
-
-export function links() {
-  const favicon = iconToFavicon(
-    <AppIcon fill='transparent' padding={13} wip={false} />,
-  )
-  return [favicon, { rel: 'stylesheet', href: styles }]
-}
+export const { meta, links } = generateHead({
+  metadata,
+  icon: <AppIcon fill='transparent' padding={13} wip={false} />,
+  styles,
+  links: SAMPLES_PREFETCH,
+})
 
 export default function App() {
   return (
@@ -69,9 +65,19 @@ export default function App() {
         />
 
         <Button
-          text='Reset'
-          icon={Replay}
-          onClick={() => api.control('reset')}
+          text='Tombola Sequencer'
+          icon={Hexagon}
+          onClick={() => api.show('TOMBOLA')}
+        />
+        <Button
+          text='Endless Sequencer'
+          icon={Pattern}
+          onClick={() => api.show('ENDLESS')}
+        />
+        <Button
+          text='Pattern Sequencer'
+          icon={Grid}
+          onClick={() => api.show('PATTERN')}
         />
         <Button
           text='Left'
@@ -97,26 +103,28 @@ export default function App() {
           icon={Backspace}
           onClick={() => api.control('delete')}
         />
-
+        <Button text='1' onClick={() => api.setSound('piano')} />
+        <Button text='2' onClick={() => api.setSound('synth')} />
+        <Button text='3' onClick={() => api.setSound('musicbox')} />
         <Keyboard />
         <Button
-          className='col-start-5 row-start-7'
-          text='Tombola Sequencer'
-          icon={Hexagon}
-          onClick={() => api.show('TOMBOLA')}
+          text='4'
+          className='row-start-9'
+          onClick={() => api.setSound('triangle')}
         />
         <Button
-          className='col-start-5 row-start-9'
-          text='Endless Sequencer'
-          icon={Pattern}
-          onClick={() => api.show('ENDLESS')}
+          text='5'
+          className='row-start-9'
+          onClick={() => api.setSound('sine')}
         />
         <Button
-          className='col-start-5 row-start-11'
-          text='Pattern Sequencer'
-          icon={Grid}
-          onClick={() => api.show('PATTERN')}
+          text='6'
+          className='row-start-9'
+          onClick={() => api.setSound('marimba')}
         />
+        <Button text='7' onClick={() => api.setSound('kalimba')} />
+        <Button text='8' onClick={() => api.setSound('harp')} />
+        <Button text='9' onClick={() => api.setSound('recorder')} />
       </Frame>
     </Container>
   )

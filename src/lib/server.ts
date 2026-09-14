@@ -1,41 +1,91 @@
 import { renderToStaticMarkup } from 'react-dom/server'
+import type { LinkDescriptor, MetaDescriptor } from 'react-router'
 
-import { DOMAIN } from './env'
+import { DOMAIN, SITE, TWITTER_HANDLE } from './env'
 import { svgToURL } from './graphics'
 import { type AppMetadata } from './types'
 
-export function iconToFavicon(svg: React.ReactNode) {
-  // Render the SVG component to a string
-  const svgString = renderToStaticMarkup(svg)
+const iconToFavicon = (icon: React.ReactNode): LinkDescriptor => ({
+  rel: 'icon',
+  type: 'image/svg+xml',
+  href: svgToURL(renderToStaticMarkup(icon)),
+})
 
-  return {
-    rel: 'icon',
-    type: 'image/svg+xml',
-    href: svgToURL(svgString),
-  }
+interface Meta {
+  title: string
+  description: string
+  url: string
+  image: string
+  imageAlt: string
 }
 
-export function generateMeta(metadata: AppMetadata) {
-  const imageUrl = `${DOMAIN}/og/${metadata.id}.avif`
-
+export function generateMeta({
+  title,
+  description,
+  url,
+  image,
+  imageAlt,
+}: Meta): MetaDescriptor[] {
   return [
-    { title: metadata.name },
-    { name: 'description', content: metadata.description },
+    { title },
+    { name: 'description', content: description },
+    { tagName: 'link', rel: 'canonical', href: url },
 
-    { property: 'og:site_name', content: "Simohamed's Portfolio" },
-    { property: 'og:title', content: metadata.name },
-    { property: 'og:description', content: metadata.description },
-    { property: 'og:image', content: imageUrl },
+    { property: 'og:site_name', content: SITE.siteName },
+    { property: 'og:title', content: title },
+    { property: 'og:description', content: description },
+    { property: 'og:image', content: image },
+    { property: 'og:image:alt', content: imageAlt },
     { property: 'og:image:width', content: '1200' },
     { property: 'og:image:height', content: '630' },
     { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: `${DOMAIN}/${metadata.id}` },
+    { property: 'og:url', content: url },
 
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: metadata.name },
-    { name: 'twitter:description', content: metadata.description },
-    { name: 'twitter:image', content: imageUrl },
-    { name: 'twitter:site', content: '@_smhmd' },
-    { name: 'twitter:creator', content: '@_smhmd' },
+    { name: 'twitter:title', content: title },
+    { name: 'twitter:description', content: description },
+    { name: 'twitter:image', content: image },
+    { name: 'twitter:site', content: TWITTER_HANDLE },
+    { name: 'twitter:creator', content: TWITTER_HANDLE },
   ]
+}
+
+interface HeadOptions {
+  metadata: AppMetadata
+  icon: React.ReactNode
+  font?: string | string[]
+  styles?: string
+  links?: LinkDescriptor[]
+}
+
+export function generateHead({
+  metadata,
+  icon,
+  font,
+  styles,
+  links = [],
+}: HeadOptions) {
+  return {
+    meta: () =>
+      generateMeta({
+        title: `${metadata.name} | ${SITE.name}`,
+        description: metadata.description,
+        url: `${DOMAIN}/${metadata.id}`,
+        image: `${DOMAIN}/og/${metadata.id}.avif`,
+        imageAlt: `${metadata.name} screenshot`,
+      }),
+    links: () => {
+      const result = [iconToFavicon(icon), ...links]
+      if (styles) {
+        result.push({ rel: 'stylesheet', href: styles })
+      }
+      if (font) {
+        result.push({
+          rel: 'stylesheet',
+          href: `https://fonts.googleapis.com/css2?display=swap&family=${font}`,
+        })
+      }
+      return result
+    },
+  }
 }

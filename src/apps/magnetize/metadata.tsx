@@ -4,7 +4,9 @@ import type { AppMetadata } from 'src/lib/types'
 export const metadata: AppMetadata = {
   id: 'magnetize',
   name: 'Magnetize',
-  description: 'Convert torrent files into magnet links',
+  summary: 'Turn torrent files into magnet links',
+  description:
+    'Convert a .torrent file into a magnet link. Entirely in the browser. Nothing is uploaded or leaves your machine.',
   type: 'utility',
   Icon: AppIcon,
   dark: false,
@@ -35,6 +37,7 @@ export function AppIcon(props: React.ComponentProps<typeof IconFrame>) {
         d='m46.61 29.32 5.5 6.7a1.5 1.5 0 0 1-.2 2.1l-4.86 4.01-7.42-9 4.86-4a1.5 1.5 0 0 1 2.11.2h.01Zm17.2 18.37 6.68 5.53a1.5 1.5 0 0 1 .2 2.11l-4 4.86-9-7.44 4.01-4.86a1.5 1.5 0 0 1 2.11-.2Z'
       />
       <path
+        className='group-act/icon:scale-115 group-act/icon:brightness-115 origin-center duration-300'
         fill='#FFAC33'
         d='M58.5 24.76c.17-.18 0-.48-.24-.42l-7.4 1.81a.3.3 0 0 0-.14.5l2.42 2.55-2.68 2.75c-.18.18 0 .48.24.42l7.4-1.8a.3.3 0 0 0 .13-.5l-2.42-2.56 2.7-2.75ZM75 40.53c.13-.2-.09-.47-.32-.37l-6.92 3.17a.3.3 0 0 0-.05.51l2.86 2.05-2.12 3.21c-.14.21.08.47.31.37l6.92-3.17a.3.3 0 0 0 .05-.5l-2.85-2.06 2.12-3.2Z'
       />

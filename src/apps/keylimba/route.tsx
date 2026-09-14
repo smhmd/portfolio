@@ -3,7 +3,8 @@ import type { LoaderFunction } from 'react-router'
 
 import { Container } from 'src/components'
 import { getCookie } from 'src/lib/cookies'
-import { generateMeta, iconToFavicon } from 'src/lib/server'
+import { SAMPLES_PREFETCH } from 'src/lib/samples'
+import { generateHead } from 'src/lib/server'
 
 import {
   InstrumentProvider,
@@ -16,20 +17,12 @@ import {
 import { colors, useOptions } from './lib'
 import { AppIcon, metadata } from './metadata'
 
-export function meta() {
-  return generateMeta(metadata)
-}
-
-export function links() {
-  const favicon = iconToFavicon(<AppIcon padding={8} />)
-  return [
-    favicon,
-    {
-      rel: 'stylesheet',
-      href: 'https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap',
-    },
-  ]
-}
+export const { meta, links } = generateHead({
+  metadata,
+  icon: <AppIcon padding={8} />,
+  font: 'Quicksand:wght@300..700',
+  links: SAMPLES_PREFETCH,
+})
 
 export const loader: LoaderFunction = async ({ request }) => {
   const cookie = request.headers.get('Cookie') ?? ''

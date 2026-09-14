@@ -5,6 +5,7 @@ import type { IconFrame } from 'src/components'
 export type AppMetadata = {
   id: string
   name: string
+  summary: string
   description: string
   type: 'demo' | 'game' | 'music' | 'utility'
   Icon(props: Props<typeof IconFrame>): React.JSX.Element

@@ -1,23 +1,20 @@
 import { useSelector } from '@xstate/react'
 import clsx from 'clsx'
 
-import { Bolt, Play, Sparkles } from 'src/assets'
+import { Bolt, Play, Sparkles } from 'src/icons'
 import { Container } from 'src/components'
-import { generateMeta, iconToFavicon } from 'src/lib/server'
+import { generateHead } from 'src/lib/server'
 
 import { AdvancedOptions, Alert, DropZone, MagnetLink } from './components'
 import { actor, api, compareState, createDummyTorrent } from './lib'
 import { AppIcon, metadata } from './metadata'
 import styles from './styles.css?url'
 
-export function meta() {
-  return generateMeta(metadata)
-}
-
-export function links() {
-  const favicon = iconToFavicon(<AppIcon fill='transparent' padding={24} />)
-  return [favicon, { rel: 'stylesheet', href: styles }]
-}
+export const { meta, links } = generateHead({
+  metadata,
+  icon: <AppIcon fill='transparent' padding={24} />,
+  styles,
+})
 
 export default function App() {
   return (

@@ -8,8 +8,8 @@ import { metadata as musicWorkstation } from './music-workstation/metadata'
 import { metadata as spinningTops } from './spinning-tops/metadata'
 
 export const apps = {
-  '2048': _2048,
   'about-me': aboutMe,
+  '2048': _2048,
   'dice-roll': diceRoll,
   keylimba,
   magnetize,
@@ -21,15 +21,15 @@ export const apps = {
 export type AppID = keyof typeof apps
 export type AppGridArray = Array<AppID | [string, AppID[]]>
 
-export const appIDs = Object.keys(apps) as AppID[]
-
-export const appGrid: AppGridArray = [
-  '2048',
+export const appIDs: AppID[] = [
   'about-me',
+  'monument-valley',
+  'keylimba',
+  '2048',
   'dice-roll',
   'magnetize',
-  'keylimba',
-  'monument-valley',
   'spinning-tops',
   'music-workstation',
 ]
+
+export const appGrid: AppGridArray = appIDs

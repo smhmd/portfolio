@@ -1,25 +1,16 @@
 import { Container } from 'src/components'
-import { generateMeta, iconToFavicon } from 'src/lib/server'
+import { generateHead } from 'src/lib/server'
 
 import { Splash, Stage } from './components/'
 import { AppIcon, metadata } from './metadata'
 import styles from './styles.css?url'
 
-export function meta() {
-  return generateMeta(metadata)
-}
-
-export function links() {
-  const favicon = iconToFavicon(<AppIcon fill='transparent' padding={8} />)
-  return [
-    favicon,
-    { rel: 'stylesheet', href: styles },
-    {
-      rel: 'stylesheet',
-      href: `https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@700&display=swap`,
-    },
-  ]
-}
+export const { meta, links } = generateHead({
+  metadata,
+  icon: <AppIcon fill='transparent' padding={8} />,
+  font: 'Josefin+Slab:wght@700',
+  styles,
+})
 
 export default function App() {
   return (

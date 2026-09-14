@@ -4,7 +4,9 @@ import type { AppMetadata } from 'src/lib/types'
 export const metadata: AppMetadata = {
   id: 'music-workstation',
   name: 'Music Workstation',
-  description: 'Create beats in music workstation',
+  summary: 'Sequence beats on the OP-1 Field',
+  description:
+    'Program patterns and make amazing looping sound. Based on Teenage Engineering OP-1 Field sequencers.',
   type: 'music',
   Icon: AppIcon,
   dark: false,
@@ -56,7 +58,7 @@ export function AppIcon(props: React.ComponentProps<typeof IconFrame>) {
         rx='16.5'
         ry='12.5'
       />
-      <g className='transition-transform group-hover/icon:translate-y-[3px]'>
+      <g className='group-act/icon:translate-y-[3px] transition-transform'>
         <ellipse cx='50.5' cy='25.5' fill='#EF3E23' rx='16.5' ry='12.5' />
         <path
           fill='#EF3E23'

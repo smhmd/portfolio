@@ -3,9 +3,9 @@ import { useEffect, useMemo } from 'react'
 import { useMachine, useSelector } from '@xstate/react'
 import clsx from 'clsx'
 
-import { Info } from 'src/assets'
 import { Container } from 'src/components'
-import { generateMeta, iconToFavicon } from 'src/lib/server'
+import { Info } from 'src/icons'
+import { generateHead } from 'src/lib/server'
 import type { API } from 'src/lib/types'
 
 import { GameBoard, GameHeader } from './components'
@@ -13,14 +13,11 @@ import { type Events, machine } from './lib'
 import { AppIcon, metadata } from './metadata'
 import styles from './styles.css?url'
 
-export function meta() {
-  return generateMeta(metadata)
-}
-
-export function links() {
-  const favicon = iconToFavicon(<AppIcon padding={13} />)
-  return [favicon, { rel: 'stylesheet', href: styles }]
-}
+export const { meta, links } = generateHead({
+  metadata,
+  icon: <AppIcon padding={13} />,
+  styles,
+})
 
 export default function App() {
   const [_, send, actor] = useMachine(machine)
@@ -55,13 +52,6 @@ export default function App() {
     <Container
       id={metadata.id}
       className='isolate flex flex-col items-center justify-between bg-[#F9F7EF] text-[#756452]'>
-      <div
-        aria-hidden
-        className={clsx(
-          'fixed inset-0 -z-10 h-lvh w-lvw',
-          'wp-[stars.svg] bg-[#F9F7EF] bg-cover bg-center bg-no-repeat',
-        )}
-      />
       <GameHeader
         onReset={handle.resetGame}
         className='z-1'

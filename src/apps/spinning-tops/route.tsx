@@ -3,24 +3,20 @@ import { useRef } from 'react'
 import clsx from 'clsx'
 
 import { Container } from 'src/components'
-import { generateMeta, iconToFavicon } from 'src/lib/server'
+import { generateHead } from 'src/lib/server'
 
 import { GameProvider, Menu, Stage } from './components'
+import { leaveGame } from './lib'
 import { AppIcon, metadata } from './metadata'
 
-export function meta() {
-  return generateMeta(metadata)
-}
+export const { meta, links } = generateHead({
+  metadata,
+  icon: <AppIcon fill='transparent' padding={18} />,
+  font: 'Orbitron',
+})
 
-export function links() {
-  const favicon = iconToFavicon(<AppIcon fill='transparent' padding={18} />)
-  return [
-    favicon,
-    {
-      rel: 'stylesheet',
-      href: 'https://fonts.googleapis.com/css2?family=Orbitron&display=swap',
-    },
-  ]
+export function clientLoader() {
+  return leaveGame()
 }
 
 export default function App() {

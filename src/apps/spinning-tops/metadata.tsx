@@ -4,7 +4,9 @@ import type { AppMetadata } from 'src/lib/types'
 export const metadata: AppMetadata = {
   id: 'spinning-tops',
   name: 'Spinning Tops',
-  description: 'Battle spinning tops and be the last',
+  summary: 'Battle spinning tops, last one wins',
+  description:
+    'Battle your spinning top against your friend. The last one standing in the ring wins. Fight against the AI or invite a friend.',
   type: 'game',
   Icon: AppIcon,
   dark: true,
@@ -20,7 +22,7 @@ export function AppIcon(props: React.ComponentProps<typeof IconFrame>) {
         />
       </defs>
 
-      <g className='*:animate-paused *:animate-spin-wobble group-hover/icon:*:animate-running *:origin-bottom'>
+      <g className='*:animate-paused *:animate-spin-wobble group-act/icon:*:animate-running *:origin-bottom'>
         <g style={{ animationDelay: '-0.13s' }}>
           <use
             href='#spinning-tops-icon'

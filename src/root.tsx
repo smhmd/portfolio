@@ -4,7 +4,6 @@ import {
   isRouteErrorResponse,
   Links,
   Meta,
-  type MetaFunction,
   Outlet,
   Scripts,
   ScrollRestoration,
@@ -18,14 +17,10 @@ import mainCSS from 'src/styles/main.css?url'
 import type { Route } from './+types/root'
 import { SHOW_APP_DRAWER } from './lib/env'
 
-export const meta: MetaFunction = () => [
-  { name: 'apple-mobile-web-app-title', content: 'Portfolio' },
-]
-
 export const links: Route.LinksFunction = () => [
   {
     rel: 'manifest',
-    href: '/favicon/site.webmanifest',
+    href: '/site.webmanifest',
   },
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
   {
@@ -42,10 +37,11 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: React.PropsWithChildren) {
   return (
-    <html lang='en' className='touch-none select-none'>
+    <html lang='en'>
       <head>
         <meta charSet='utf-8' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <meta name='theme-color' content='#111111' />
         <Meta />
         <Links />
       </head>

@@ -2,17 +2,22 @@ import { Link } from 'react-router'
 
 import clsx from 'clsx'
 
-import { Github, LinkedIn, Mail, Twitter } from 'src/assets'
+import { Github, LinkedIn, Mail, Twitter } from 'src/icons'
+import { SITE, EMAIL, SOCIALS, DOMAIN } from 'src/lib/env'
+
 import type { AppMetadata } from 'src/lib/types'
 
-import { apps } from '../index'
+import { appIDs, apps } from '../index'
+import { generateMeta } from 'src/lib/server'
 
 export function meta() {
-  return [
-    { title: 'Portfolio' },
-    { name: 'apple-mobile-web-app-title', content: 'My Portfolio' },
-    { name: 'description', content: 'My portfolio' },
-  ]
+  return generateMeta({
+    title: SITE.title,
+    description: SITE.description,
+    url: DOMAIN,
+    image: SITE.image,
+    imageAlt: SITE.siteName,
+  }).concat({ name: 'apple-mobile-web-app-title', content: SITE.name })
 }
 
 export function links() {
@@ -36,33 +41,33 @@ export function links() {
   ]
 }
 
-const APPS = Object.values(apps)
+const APPS = appIDs.map((id) => apps[id])
 const SOCIAL_LINKS = [
   {
     id: 'email',
     label: 'Email',
-    href: 'mailto:you@example.com',
+    href: `mailto:${EMAIL}`,
     Icon: Mail,
-    className: 'fill-neutral-400 hocus:fill-neutral-800',
+    className: 'fill-neutral-400 group-hocus:fill-neutral-800',
   },
   {
     id: 'github',
-    label: 'Github',
-    href: '#',
+    label: 'GitHub',
+    href: SOCIALS.GitHub,
     Icon: Github,
-    className: 'text-neutral-200 hocus:text-neutral-700',
+    className: 'text-neutral-200 group-hocus:text-neutral-700',
   },
   {
     id: 'x-twitter',
     label: 'X (Twitter)',
-    href: '#',
+    href: SOCIALS.Twitter,
     Icon: Twitter,
     className: 'text-sky-500',
   },
   {
-    id: 'linkedIn',
+    id: 'linkedin',
     label: 'LinkedIn',
-    href: '#',
+    href: SOCIALS.LinkedIn,
     Icon: LinkedIn,
     className: 'text-blue-500',
   },
@@ -80,7 +85,7 @@ export default function Launcher() {
       <div
         aria-hidden
         className={clsx(
-          'fixed inset-0 -z-10 h-lvh w-lvw',
+          'fixed inset-0 -z-10',
           'wp-[liquid-darkness.svg] bg-cover bg-center bg-no-repeat',
         )}
       />
@@ -92,18 +97,18 @@ export default function Launcher() {
           )}>
           <img
             src='/images/simo.svg'
-            alt='Simo'
+            alt='Simo, illustrated'
             className='size-full object-cover'
           />
         </div>
 
         <div className='flex flex-col gap-1'>
-          <div className='text-[2.5cqh] font-semibold leading-tight tracking-tight'>
+          <h1 className='text-[2.5cqh] font-semibold leading-tight tracking-tight'>
             Simo
-          </div>
-          <div className='text-[1.5cqh] font-medium text-neutral-50/80'>
-            I design and build for the web
-          </div>
+          </h1>
+          <p className='text-[1.5cqh] font-medium text-neutral-50/80'>
+            Software engineer. I design and build for the web.
+          </p>
         </div>
       </header>
 
@@ -112,8 +117,7 @@ export default function Launcher() {
           'container mx-auto grid w-full grow content-center',
           'gap-x-4',
           'gap-y-6',
-          'sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4',
-          // 'grid-cols-[repeat(auto-fit,minmax(min(100%,clamp(18vw,30vw,26rem)),1fr))]',
+          'sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
         )}>
         {APPS.map((app) => (
           <AppCard key={app.id} app={app} />
@@ -122,27 +126,32 @@ export default function Launcher() {
 
       <footer className='flex flex-col items-center justify-between gap-y-2'>
         <div className='flex items-center gap-2.5'>
-          {SOCIAL_LINKS.map(({ id, label, Icon, href, className }) => (
-            <a
-              key={id}
-              href={href}
-              aria-label={label}
-              className={clsx(
-                'corner-squircle group flex h-10 items-center gap-2 rounded-full bg-neutral-700 px-4 text-sm font-semibold text-neutral-200 transition',
-                'hocus:bg-neutral-200 hocus:text-neutral-900 outline-none',
-              )}>
-              <Icon aria-hidden className={clsx('size-4', className)} />
-            </a>
-          ))}
+          {SOCIAL_LINKS.map(({ id, label, Icon, href, className }) => {
+            const external = !href.startsWith('mailto:')
+
+            return (
+              <a
+                key={id}
+                href={href}
+                aria-label={label}
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noreferrer me' : undefined}
+                className={clsx(
+                  'corner-squircle group flex h-10 items-center rounded-full px-4',
+                  'bg-neutral-700 text-neutral-200 transition',
+                  'hocus:bg-neutral-200 hocus:text-neutral-900 outline-none',
+                )}>
+                <Icon aria-hidden className={clsx('size-4', className)} />
+              </a>
+            )
+          })}
         </div>
-        <div className='font-mono text-xs text-neutral-500'>©2026 Simo</div>
+        <div className='font-mono text-xs text-neutral-500'>
+          © {new Date().getFullYear()} Simo
+        </div>
       </footer>
     </div>
   )
-}
-
-type AppCardProps = {
-  app: AppMetadata
 }
 
 const cta: Record<AppMetadata['type'], string> = {
@@ -152,7 +161,7 @@ const cta: Record<AppMetadata['type'], string> = {
   utility: 'Use',
 }
 
-function AppCard({ app }: AppCardProps) {
+function AppCard({ app }: { app: AppMetadata }) {
   const Icon = app.Icon
 
   return (
@@ -160,7 +169,7 @@ function AppCard({ app }: AppCardProps) {
       prefetch='intent'
       to={`/${app.id}`}
       className={clsx(
-        '@container group',
+        'group/icon @container group', // group/icon enables icon animations
         'flex flex-col p-[2%]',
         'transition duration-200 ease-out',
         'active:scale-97 hocus:init:scale-103 outline-none',
@@ -188,7 +197,7 @@ function AppCard({ app }: AppCardProps) {
             app.wip && 'shadow-inner-xl shadow-black',
           )}
           src={`/og/${app.id}.avif`}
-          alt={`${app.name} screenshot`}
+          alt={`${app.name} — screenshot`}
           style={{ filter: app.wip ? 'url(#vignette)' : undefined }}
         />
       </div>
@@ -196,16 +205,15 @@ function AppCard({ app }: AppCardProps) {
       <div className='mt-[1.25cqh] flex items-center gap-[3cqw]'>
         <Icon aria-hidden className='size-[14cqw] flex-none' />
 
-        <div className='text-shadow-lg flex min-w-0 flex-1 flex-col gap-y-1.5 truncate'>
-          <h3 className='text-[3.25cqw] font-semibold leading-tight text-white'>
+        <div className='text-shadow-lg flex min-w-0 flex-1 flex-col gap-y-1.5'>
+          <h2 className='truncate text-[3.25cqw] font-semibold leading-tight text-white'>
             {app.name}
-          </h3>
-          <p className='text-[2.75cqw] text-white/70'>{app.description}</p>
+          </h2>
+          <p className='truncate text-[2.75cqw] text-white/70'>{app.summary}</p>
         </div>
 
         <span
           className={clsx(
-            // 'hidden sm:block',
             'flex-none rounded-full border border-neutral-200/20 px-[4.25cqw] py-[0.6cqh]',
             'text-[3.25cqw] font-semibold text-white transition',
             'group-hocus:bg-neutral-200/25',

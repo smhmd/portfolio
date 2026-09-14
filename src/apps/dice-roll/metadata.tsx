@@ -4,7 +4,9 @@ import type { AppMetadata } from 'src/lib/types'
 export const metadata: AppMetadata = {
   id: 'dice-roll',
   name: '3D Dice Roll',
-  description: 'Roll dice for your D&D game',
+  summary: 'The best tabletop dice rolling experience',
+  description:
+    'The best tabletop 3D dice rolling experience! D4, D6, D8, D10, D12, D20, and D100. Real physics.',
   type: 'utility',
   Icon: AppIcon,
   dark: true,
@@ -13,7 +15,9 @@ export const metadata: AppMetadata = {
 export function AppIcon(props: React.ComponentProps<typeof IconFrame>) {
   return (
     <IconFrame fill='#222' {...props}>
-      <g fill='none'>
+      <g
+        fill='none'
+        className='group-act/icon:rotate-180 origin-center transition-transform duration-500'>
         <path fill='#ff4d71' d='m71.01 29.92-20.93 19.2-28.24-7L42.8 21.95z' />
         <path
           fill='#ab1a37'

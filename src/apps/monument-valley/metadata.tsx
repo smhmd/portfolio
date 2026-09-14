@@ -4,7 +4,9 @@ import type { AppMetadata } from 'src/lib/types'
 export const metadata: AppMetadata = {
   id: 'monument-valley',
   name: 'Monument Valley',
-  description: 'Play a puzzle game of optical illusions',
+  summary: 'Meditative puzzle through impossible geometry',
+  description:
+    'A Monument Valley game tribute. A meditative puzzle through optical illusions and impossible geometry.',
   type: 'game',
   Icon: AppIcon,
   dark: true,
@@ -55,20 +57,22 @@ export function AppIcon(props: React.ComponentProps<typeof IconFrame>) {
         />
         <path
           fill='#251805'
-          d='M53.674 39.261a7.567 7.567 0 1 0 0-15.134 7.567 7.567 0 0 0 0 15.134'
-        />
-        <path
-          fill='#251805'
           d='M55.88 40.762c-.053 1.157-.702 1.332-2.685 1.257-1.982-.076-2.26-.916-2.508-1.257-.162-5.379 1.222-6.298 2.696-6.298s2.612 3.853 2.498 6.298'
         />
-        <path
-          fill='#fdfbf9'
-          d='M56.266 38.41c2.747 0 4.975-3.006 4.975-6.716s-2.228-6.716-4.975-6.716c-2.748 0-4.976 3.007-4.976 6.716s2.228 6.717 4.976 6.717'
-        />
-        <path
-          fill='#fdfbf9'
-          d='M55.464 24.337C53.922 23.697 37.79 23.327 31 23c0 0 9.413 9.37 16.787 13.448.182-8.034 4.599-12.242 7.677-12.111'
-        />
+        <g className='group-act/icon:-rotate-20 origin-[52%_35%] transition-transform duration-500 ease-out'>
+          <path
+            fill='#251805'
+            d='M53.674 39.261a7.567 7.567 0 1 0 0-15.134 7.567 7.567 0 0 0 0 15.134'
+          />
+          <path
+            fill='#fdfbf9'
+            d='M56.266 38.41c2.747 0 4.975-3.006 4.975-6.716s-2.228-6.716-4.975-6.716c-2.748 0-4.976 3.007-4.976 6.716s2.228 6.717 4.976 6.717'
+          />
+          <path
+            fill='#fdfbf9'
+            d='M55.464 24.337C53.922 23.697 37.79 23.327 31 23c0 0 9.413 9.37 16.787 13.448.182-8.034 4.599-12.242 7.677-12.111'
+          />
+        </g>
       </g>
     </IconFrame>
   )
