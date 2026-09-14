@@ -253,22 +253,30 @@ export function checkWon({ board, won }: CheckWonProps): boolean {
   return board.some((tile) => tile.value === WIN_THRESHOLD)
 }
 
-// TODO: the localstorage code is happy-path only.
-// we need to guard against something going wrong.
-
 /**
- * Persist state in local storage
+ * Persist state in local storage.
  */
 export function persistState(state: Partial<State>): void {
-  localStorage.setItem(LOCALSTORAGE_ID, JSON.stringify(state))
+  try {
+    localStorage.setItem(LOCALSTORAGE_ID, JSON.stringify(state))
+  } catch {
+    // A failed save must not break the game.
+  }
 }
 
 /**
- * Initialize state (using state from local storage if available)
+ * Initialize state (from local storage if available.)
  */
 export function initializeState(): Partial<State> {
-  const persisted = JSON.parse(localStorage.getItem(LOCALSTORAGE_ID) || 'null')
-  if (persisted) return persisted
+  try {
+    const persisted = JSON.parse(
+      localStorage.getItem(LOCALSTORAGE_ID) || 'null',
+    )
+    if (persisted) return persisted
+  } catch {
+    // Fall through to a fresh board.
+  }
+
   return { board: addTile(addTile([])) }
 }
 
