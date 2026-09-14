@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { Dialog, type DialogRootActions } from '@base-ui/react/dialog'
 import clsx from 'clsx'
@@ -15,6 +15,13 @@ export const AppDrawer = () => {
   function handleOpenChange(open: boolean) {
     isAppDrawerOpen.current = open
   }
+
+  useEffect(
+    () => () => {
+      isAppDrawerOpen.current = false
+    },
+    [],
+  )
 
   function handleClose() {
     dialogRef.current?.close()

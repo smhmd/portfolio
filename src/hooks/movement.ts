@@ -56,7 +56,7 @@ export const useDirectionalSwipe = ({ handler, disabled }: Props) => {
     })
 
     return () => controller.abort()
-  }, [handler])
+  }, [disabled, handler])
 }
 
 const directionKeyCodes: Record<string, Direction> = {
