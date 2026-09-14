@@ -1,10 +1,11 @@
 import { Dialog } from '@base-ui/react/dialog'
 import clsx from 'clsx'
 
-import { ArrowDown } from 'src/assets'
+import { ArrowDown } from 'src/icons'
 
 import {
   colors,
+  getInstrument,
   instruments,
   labels,
   optionConfig,
@@ -110,7 +111,14 @@ function Controls() {
           options={instruments}
           value={options.instrumentSound}
           onValueChange={(value) => {
-            setOption({ option: 'instrumentSound', value: Number(value) })
+            const index = Number(value)
+            const instrument = getInstrument(index)
+            setOption({ option: 'instrumentSound', value: index })
+            void instrument.ready.then(() =>
+              instrument.play(
+                `${tunings[options.tuning]}${options.tuning < 4 ? 3 : 4}`,
+              ),
+            )
           }}
         />
       </li>

@@ -16,11 +16,11 @@ type GridItemProps = Props<
 >
 
 export function GridItem({ id, ref, ...props }: GridItemProps) {
-  const { name, Icon, description } = apps[id]
+  const { name, Icon, summary } = apps[id]
   return (
-    <GridIcon ref={ref} name={name} title={description}>
+    <GridIcon ref={ref} name={name} title={summary}>
       <Link
-        className='absolute inset-0 z-50 cursor-pointer'
+        className='absolute inset-0 z-50 cursor-pointer outline-none'
         tabIndex={0}
         prefetch='intent'
         to={`/${id}`}

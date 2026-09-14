@@ -38,6 +38,7 @@ export function Background() {
   return (
     <>
       <img
+        alt=''
         aria-hidden
         className='fixed inset-0 size-full bg-[#6B6567] object-cover object-left mix-blend-multiply'
         src='/wallpapers/metal.avif'

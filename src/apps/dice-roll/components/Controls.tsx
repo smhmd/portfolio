@@ -116,11 +116,14 @@ export function Controls() {
           'mx-auto grid w-full gap-4',
           'max-w-lg',
           'grid-cols-5',
-          'sm:grid-cols-7',
+          // A compact tier of its own: the wider grid arrives early, but
+          // tighter and narrower, so the row stops eating the screen.
+          'xs:max-w-md xs:grid-cols-7 xs:gap-2',
+          'sm:max-w-lg sm:gap-4',
           'md:max-w-2xl md:grid-cols-11',
         )}>
         <DiceButton
-          className='sm:col-span-2'
+          className='xs:col-span-2'
           label='Clear'
           color='#ffffff'
           onClick={clear}
@@ -130,7 +133,7 @@ export function Controls() {
         {Object.entries(BACKGROUNDS).map(([sides, color]) => (
           <DiceButton
             key={sides}
-            className='aspect-square sm:row-start-2 md:row-auto'
+            className='xs:row-start-2 aspect-square md:row-auto'
             label={`D${sides}`}
             color={color}
             onClick={() => add(Number(sides) as Variant)}

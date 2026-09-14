@@ -56,7 +56,7 @@ export function Tines({ className, ...props }: TinesProps) {
     <div
       role='group'
       aria-label='Kalimba keys'
-      className={clsx('flex size-full touch-none justify-around', className)}
+      className={clsx('flex size-full justify-around', className)}
       {...props}>
       {tines.map((info, i) => (
         <Tine

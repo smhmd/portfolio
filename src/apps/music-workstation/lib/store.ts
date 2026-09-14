@@ -5,7 +5,7 @@ import { Recorder } from 'src/lib/recorder'
 import * as ENDLESS from '../screens/endless/reducer'
 import * as PATTERN from '../screens/pattern/reducer'
 import * as TOMBOLA from '../screens/tombola/reducer'
-import { audio } from './audio'
+import { audio, type SoundName } from './audio'
 import type { ControlId, ParameterId, ScreenId, State } from './common'
 import { APP_ID, INITIAL } from './common'
 
@@ -37,6 +37,10 @@ export const api = {
     const { volume, muted } = store.get()
     store.set({ muted: !muted })
     audio.setVolume(muted ? volume : 0)
+  },
+
+  setSound(name: SoundName) {
+    audio.setSound(name)
   },
 
   attackNote(note: string) {

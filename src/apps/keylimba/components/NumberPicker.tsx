@@ -32,7 +32,7 @@ export function NumberPicker({
           onValueChange?.(v)
         }}
         {...props}>
-        <Slider.Control className='flex grow touch-none items-center'>
+        <Slider.Control className='flex grow items-center'>
           <Slider.Track className='h-6.5 w-full rounded-full bg-white/30'>
             <Slider.Thumb
               aria-label={name}

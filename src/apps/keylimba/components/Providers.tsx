@@ -11,10 +11,9 @@ import { interpolate, isEven } from 'src/lib/math'
 import { gpuTier } from 'src/lib/utils'
 
 import {
-  Instrument,
+  getInstrument,
   InstrumentContext,
   type InstrumentContextType,
-  instruments,
   optionConfig,
   type Options,
   OptionsContext,
@@ -29,22 +28,6 @@ import {
   useOptions,
   useRecorder,
 } from '../lib'
-
-/**
- * Instruments are created (and their samples loaded) lazily,
- * on first selection, then cached.
- * Indexed by the `instrumentSound` option.
- */
-const instrumentCache = new Map<number, Instrument>()
-
-function getInstrument(index: number) {
-  let instrument = instrumentCache.get(index)
-  if (!instrument) {
-    instrument = new Instrument(instruments[index])
-    instrumentCache.set(index, instrument)
-  }
-  return instrument
-}
 
 // preload the default instrument
 getInstrument(optionConfig.instrumentSound.init)

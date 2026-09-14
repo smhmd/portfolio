@@ -66,6 +66,7 @@ const machine = setup({
   // The opponent can tab out (or back in) at any point in the flow.
   on: {
     'friend.pause': { actions: 'setFriendPaused' },
+    'net.disconnect': { target: '.MAIN_MENU', actions: 'resetNet' },
   },
   states: {
     MAIN_MENU: {
@@ -79,14 +80,12 @@ const machine = setup({
     LOBBY: {
       on: {
         'game.countdown': { target: 'COUNTDOWN' },
-        'net.disconnect': { target: 'MAIN_MENU', actions: 'resetNet' },
       },
     },
     COUNTDOWN: {
       entry: 'clearWinner',
       on: {
         'game.start': { target: 'PLAYING' },
-        'net.disconnect': { target: 'MAIN_MENU', actions: 'resetNet' },
       },
     },
     PLAYING: {
@@ -95,18 +94,15 @@ const machine = setup({
         // elimination (the host's verdict), so no special net handling
         // is needed here — one path serves local, host, and guest.
         'player.lose': { actions: 'setWinner', target: 'GAME_OVER' },
-        'net.disconnect': { target: 'MAIN_MENU', actions: 'resetNet' },
       },
     },
     GAME_OVER: {
       on: {
         'game.menu': { target: 'MAIN_MENU' },
         'game.countdown': { target: 'COUNTDOWN' },
-        'net.disconnect': { target: 'MAIN_MENU', actions: 'resetNet' },
       },
     },
   },
 })
 
-export const actor = createActor(machine)
-actor.start()
+export let actor = createActor(machine).start()

@@ -27,7 +27,7 @@ const variants = {
 export function Parameter({ variant, onChange }: ParameterProps) {
   const { ref, drag, rotation } = useDial({ onChange })
   return (
-    <Base className='**:aspect-square col-span-4 row-span-4 aspect-square touch-none'>
+    <Base className='**:aspect-square col-span-4 row-span-4 aspect-square'>
       <button
         className='cursor-grab active:cursor-grabbing'
         role='slider'

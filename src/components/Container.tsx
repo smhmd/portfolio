@@ -9,7 +9,13 @@ type ContainerProps = Props<'main', { id: string }>
 export const Container = memo(({ className, ...props }: ContainerProps) => {
   return (
     <main
-      className={clsx('h-dvh', 'init:text-balance text-pretty', className)}
+      className={clsx(
+        'no-scrollbar h-dvh overflow-auto',
+        // No pinch-zoom, pan, or accidental text selection.
+        'touch-none select-none',
+        'init:text-balance text-pretty',
+        className,
+      )}
       {...props}
     />
   )

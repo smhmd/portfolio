@@ -1,4 +1,3 @@
-// TODO: is black on Firefox
 import { useLayoutEffect, useRef } from 'react'
 
 import { Base, Geometry, Subtraction } from '@react-three/csg'

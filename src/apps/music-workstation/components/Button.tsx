@@ -1,5 +1,3 @@
-import { Fragment } from 'react'
-
 import clsx from 'clsx'
 
 import type { SVGIcon } from 'src/lib/types'
@@ -50,23 +48,20 @@ export function Button({
   variant = 'middle',
   black,
   text,
-  icon,
+  icon: Icon,
   className,
   ...props
 }: ButtonProps) {
-  const Icon = icon ?? Fragment
-
   return (
     <Base className={clsx(variants.base[variant], className)}>
       <button
-        role='button'
         className={clsx(
           'z-2 init:justify-center inline-flex cursor-pointer items-center',
           variants.label[variant],
         )}
         {...props}>
-        <Icon className='fill-neutral-800' aria-hidden />
-        <span className={clsx(icon && 'sr-only')}>{text}</span>
+        {Icon ? <Icon aria-hidden /> : null}
+        <span className={clsx(Icon && 'sr-only')}>{text}</span>
       </button>
       <div
         data-name='button-bump'

@@ -7,9 +7,11 @@ const door = createTexture(async (canvas, ctx) => {
   img.src = svgToURL(doorSVG)
   await img.decode()
 
-  canvas.width = img.width
-  canvas.height = img.height
-  ctx.drawImage(img, 0, 0)
+  // Firefox reports 0 for an SVG with no width/height of its own, which would
+  // leave a 0x0 canvas and upload a black texture.
+  canvas.width = img.width || 46
+  canvas.height = img.height || 174
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
 })
 
 /** Radial shadow to have under walking characters */

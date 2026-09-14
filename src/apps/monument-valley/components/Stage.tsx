@@ -10,7 +10,6 @@ const Scene = lazy(() => import('./Scene'))
 export function Stage() {
   return (
     <Canvas
-      className='touch-none' // touch-none is important for touch devices
       dpr={[1, 2]}
       orthographic
       camera={{

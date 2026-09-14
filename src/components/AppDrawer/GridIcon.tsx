@@ -24,7 +24,6 @@ const variants: Variants = {
   initial: { opacity: 0, scale: 0.8 },
   animate: { opacity: 1, scale: 1, transition: { duration: 0.15 } },
   exit: { opacity: 0, scale: 0.8, transition: { duration: 0.15 } },
-  hover: { scale: 1.05 },
 }
 
 export function GridIcon({
@@ -36,9 +35,8 @@ export function GridIcon({
   return (
     <motion.li
       className={clsx(
-        'group/icon',
-        'pointer-events-auto',
-        'relative flex cursor-pointer flex-col items-center justify-center gap-2',
+        'group/icon pointer-events-auto',
+        'relative cursor-pointer',
         className,
       )}
       layout
@@ -47,15 +45,19 @@ export function GridIcon({
       initial='initial'
       animate='animate'
       exit='exit'
-      whileHover='hover'
       {...props}>
-      {children}
-      <span className='text-shadow-xs line-clamp-2 h-[2lh] text-pretty text-center text-xs font-medium text-white sm:text-sm'>
-        {name}
+      <span
+        className={clsx(
+          'flex flex-col items-center justify-center gap-2',
+          'act:scale-105 active:scale-95! transition-transform',
+        )}>
+        {children}
+        <span className='text-shadow-xs line-clamp-2 h-[2lh] text-pretty text-center text-xs font-medium text-white sm:text-sm'>
+          {name}
+        </span>
       </span>
     </motion.li>
   )
 }
 
-export const iconClassName =
-  'size-18 transition-transform group-active:scale-90 sm:size-28'
+export const iconClassName = 'size-18 transition-transform sm:size-28'

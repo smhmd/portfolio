@@ -24,7 +24,7 @@ function BSOD({ error }: ErrorBoundaryProps) {
       <div
         className={clsx(
           'flex flex-col justify-between px-4 sm:px-20',
-          'h-[65vh] max-h-[720px] w-full max-w-7xl',
+          'max-h-180 h-[65vh] w-full max-w-7xl',
         )}>
         <section className='flex flex-col gap-y-8'>
           <span aria-hidden className='text-8xl sm:text-[12rem]'>

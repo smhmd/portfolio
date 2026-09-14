@@ -1,7 +1,7 @@
 import { Base } from './Base'
 
-const COLS = 10 // holes per row
-const ROWS = 35 // holes per column
+const COLS = 13 // holes per row
+const ROWS = 13 // holes per column
 const SPACING = 10 // distance between hole centers
 const CORNER_CUT = 3 // how many holes to trim at each corner (L-shape)
 const HOLE_RADIUS = 3
@@ -12,7 +12,7 @@ export function Speaker() {
   const height = (ROWS - 1) * SPACING + PADDING * 2
 
   return (
-    <Base className='col-span-4 row-span-12 p-4'>
+    <Base className='col-span-4 row-span-4 p-4'>
       <span className='p-4'>
         <svg
           xmlns='http://www.w3.org/2000/svg'

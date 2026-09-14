@@ -11,7 +11,8 @@
 }
 
 .shadow-frame {
-  box-shadow: rgba(0, 0, 0, 0.01) 1px 1px 1px 0px,
+  box-shadow:
+    rgba(0, 0, 0, 0.01) 1px 1px 1px 0px,
     rgba(0, 0, 0, 0.02) 2px 2px 3px 0px,
     rgba(0, 0, 0, 0.04) 4px 4px 6px 0px,
     rgba(0, 0, 0, 0.07) 7px 7px 10px 0px,
@@ -26,7 +27,7 @@
     rgba(0, 0, 0, 0.03) 20px 20px 8px 0px,
     rgba(0, 0, 0, 0.04) 32px 32px 14px 0px,
     rgba(0, 0, 0, 0.05) 55px 55px 23px 0px,
-    rgba(0, 0, 0, 0.08) 100px 100px 42px 0px
+    rgba(0, 0, 0, 0.08) 100px 100px 42px 0px;
 }
 
 .bg-tint {
@@ -71,10 +72,12 @@
 }
 
 .bg-power-button-tint {
-  background: linear-gradient(90deg,
-      rgba(0, 0, 0, 0.33) -3%,
-      rgba(0, 0, 0, 0.19) 53%,
-      rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.33) -3%,
+    rgba(0, 0, 0, 0.19) 53%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
 
 .bg-keyboard {
@@ -93,20 +96,24 @@
   box-shadow: 0px 6px 8px -1px rgba(0, 0, 0, 0.5);
 }
 
-.shadow-base:has([role="button"]:active) {
+.shadow-base:has([role='button']:active) {
   scale: 0.98;
 }
 
 .bg-radial-border {
-  background: linear-gradient(132deg,
-      rgba(255, 255, 255, 0.6) 14%,
-      #928c87 93%);
+  background: linear-gradient(
+    132deg,
+    rgba(255, 255, 255, 0.6) 14%,
+    #928c87 93%
+  );
 }
 
 .bg-radial-lg-border {
-  background: linear-gradient(123deg,
-      rgba(255, 255, 255, 0.6) 14%,
-      #928c87 93%);
+  background: linear-gradient(
+    123deg,
+    rgba(255, 255, 255, 0.6) 14%,
+    #928c87 93%
+  );
 }
 
 .bg-bump {
@@ -135,14 +142,18 @@
 
 .bg-screen-border {
   background:
-    linear-gradient(114deg,
+    linear-gradient(
+      114deg,
       rgba(255, 255, 255, 0.8) -2%,
       rgba(255, 255, 255, 0) 2%,
       rgba(255, 255, 255, 0) 94%,
-      rgba(255, 255, 255, 0.02) 105%),
-    linear-gradient(104deg,
+      rgba(255, 255, 255, 0.02) 105%
+    ),
+    linear-gradient(
+      104deg,
       rgba(83, 88, 89, 0.6) 73%,
-      rgba(41, 43, 44, 0.6) 100%);
+      rgba(41, 43, 44, 0.6) 100%
+    );
 }
 
 .bg-screen {
@@ -172,9 +183,11 @@
 }
 
 .bg-volume-body-border {
-  background: linear-gradient(132deg,
-      rgba(255, 255, 255, 0.6) 12%,
-      #928c87 93%);
+  background: linear-gradient(
+    132deg,
+    rgba(255, 255, 255, 0.6) 12%,
+    #928c87 93%
+  );
 }
 
 .bg-volume-body {
@@ -189,9 +202,11 @@
 }
 
 .bg-volume-top-border {
-  background: linear-gradient(132deg,
-      rgba(255, 255, 255, 0.6) 80%,
-      #928c87 93%);
+  background: linear-gradient(
+    132deg,
+    rgba(255, 255, 255, 0.6) 80%,
+    #928c87 93%
+  );
 }
 
 .bg-volume-top {
@@ -226,9 +241,11 @@
 }
 
 .bg-parameter-body-border {
-  background: linear-gradient(132deg,
-      rgba(255, 255, 255, 0.6) 12%,
-      #928c87 93%);
+  background: linear-gradient(
+    132deg,
+    rgba(255, 255, 255, 0.6) 12%,
+    #928c87 93%
+  );
 }
 
 .bg-parameter-body {

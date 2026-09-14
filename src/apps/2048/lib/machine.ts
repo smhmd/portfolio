@@ -1,6 +1,8 @@
 import { assign, setup } from 'xstate'
 
-import { APP_ID, type Direction, type State } from './common'
+import type { Direction } from 'src/lib/types'
+
+import { APP_ID, type State } from './common'
 import {
   addTile,
   checkLost,

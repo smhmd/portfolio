@@ -141,6 +141,7 @@ export const Menu = memo(() => {
           'vsm:top-[8vh] vlg:top-[12vh] vxl:top-[18vh] v2xl:top-[20vh] top-[6vh]',
         )}>
         <img
+          alt=''
           aria-hidden
           className='l:vsm:size-28 l:vmd:size-44 l:size-20 size-28 sm:size-44'
           src='/images/winner.png'

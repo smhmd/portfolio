@@ -1,8 +1,10 @@
+import { useRef } from 'react'
+
 import { Dialog } from '@base-ui/react/dialog'
 import clsx from 'clsx'
 
 import { appIDs } from 'src/apps'
-import { Search } from 'src/assets'
+import { Search } from 'src/icons'
 import { useFuzzySearch } from 'src/hooks'
 import type { Props } from 'src/lib/types'
 
@@ -12,9 +14,13 @@ type ContentProps = { onAppClick(): void }
 
 export function Content({ onAppClick }: ContentProps) {
   const { query, filter, setQuery } = useFuzzySearch(appIDs)
+  const popup = useRef<HTMLDivElement>(null)
 
   return (
     <Dialog.Popup
+      // force focus the whole group instead of first element.
+      ref={popup}
+      initialFocus={popup}
       className={clsx(
         'pointer-events-none fixed inset-0 flex cursor-auto flex-col items-center p-2 sm:p-8',
         'data-open:animate-fade-scale-up data-closed:animate-fade-scale-down',
@@ -59,7 +65,6 @@ function SearchInput({ value, onChange, ...props }: SearchInputProps) {
         )}>
         <span className='sr-only'>Search</span>
         <input
-          autoFocus
           id='app-search'
           type='search'
           placeholder='Search...'
