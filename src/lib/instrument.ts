@@ -1,10 +1,38 @@
 import { audioContext, globalGain } from 'src/lib/audio'
 import { isServer } from 'src/lib/env'
 
-type Options = { samples: Record<number, string>; shift?: number }
+import { rand } from './math'
+
+export type InstrumentOptions = {
+  /**
+   * Audio files keyed by the recorded frequency of each file,
+   * used as the resampling base (and free tuning correction).
+   */
+  samples: Record<number, string>
+  /**
+   * Octaves to shift the sounding pitch up, for instruments
+   * whose natural register sits above the requested notes.
+   * The requested note names are unaffected.
+   */
+  shift?: number
+  /**
+   * Max random detune per hit, in cents, so repeated notes
+   * never sound stamped from a mold.
+   */
+  jitter?: number
+}
+
+type PlayOptions = {
+  /** Loudness, 0..1 */
+  velocity?: number
+  /** AudioContext time to play at; now if omitted */
+  when?: number
+  /** Where to route the note; globalGain if omitted */
+  destination?: AudioNode
+}
 
 /**
- * The octave range tines can request, across all tunings and counts.
+ * The octave range that can be requested (e.g., play("C#4")).
  */
 const MIN_OCTAVE = 3
 const MAX_OCTAVE = 7
@@ -45,9 +73,10 @@ const ENHARMONIC = {
 export class Instrument {
   private notes = new Map<string, AudioBuffer>()
 
-  constructor(private options: Options) {
-    if (isServer) return
-    this.load()
+  readonly ready: Promise<unknown>
+
+  constructor(private options: InstrumentOptions) {
+    this.ready = isServer ? Promise.resolve() : this.load()
   }
 
   /**
@@ -69,9 +98,11 @@ export class Instrument {
       octaves.set(closest, [...(octaves.get(closest) ?? []), octave])
     }
 
-    for (const [freq, range] of octaves) {
-      this.loadSample(samples[freq], freq, range)
-    }
+    return Promise.all(
+      [...octaves].map(([freq, range]) =>
+        this.loadSample(samples[freq], freq, range),
+      ),
+    )
   }
 
   /**
@@ -179,17 +210,29 @@ export class Instrument {
   }
 
   /**
-   * Plays a note (e.g., play("C#4"))
+   * Plays a note (e.g., play("C#4")) now, or at `when`.
    */
-  play(note: string) {
-    if (audioContext.state === 'suspended') audioContext.resume()
+  play(note: string, { velocity = 1, when, destination }: PlayOptions = {}) {
+    if (audioContext.state === 'suspended') void audioContext.resume()
 
     const buffer = this.notes.get(note)
     if (!buffer) return
 
-    const source = audioContext.createBufferSource()
-    source.buffer = buffer
-    source.connect(globalGain)
-    source.start()
+    const { jitter } = this.options
+    const source = new AudioBufferSourceNode(audioContext, {
+      buffer,
+      detune: jitter ? rand(jitter) : 0,
+    })
+
+    destination ??= globalGain
+
+    if (velocity < 1) {
+      const gain = new GainNode(audioContext, { gain: velocity })
+      source.connect(gain).connect(destination)
+    } else {
+      source.connect(destination)
+    }
+
+    source.start(when)
   }
 }
