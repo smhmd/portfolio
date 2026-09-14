@@ -1,0 +1,13 @@
+body {
+  cursor:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><text fill="white" y="36" font-size="36">○</text></svg>')
+      18 18,
+    auto;
+}
+
+body:active {
+  cursor:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><text fill="white" y="36" font-size="36">●</text></svg>')
+      18 18,
+    auto;
+}

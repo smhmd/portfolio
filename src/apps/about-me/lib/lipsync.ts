@@ -1,102 +1,111 @@
 import { MathUtils, type Mesh, type Object3D } from 'three'
 
-import cues from './rhubarb.json'
+import data from './visemes.json'
 
 /**
- * Rhubarb mouth shapes (A–H, X = rest) mapped to sparse morph-target weights.
- * Timeline lookups use a monotonic cursor instead of scanning the cue list
- * every frame — O(1) while a line plays, one cheap rewind when it changes.
+ * Oculus visemes from visemes.json. Each cue is drawn as a trapezoid whose
+ * ramps straddle its boundaries, so every boundary is a crossfade.
+ *
+ *   sil  silence          DD  t, d      RR  r            oh  toe
+ *   PP   p, b, m          kk  k, g      aa  car          ou  boot
+ *   FF   f, v             CH  ch, j, sh  E  bed
+ *   TH   think            SS  s, z      ih  tip
+ *                         nn  n, l
  */
 
-const VISEMES: Record<string, Record<string, number>> = {
-  X: {},
-  A: { PP: 0.5 },
-  B: {
-    kk: 0.7,
-    mouthSmileLeft: 0.2,
-    mouthSmileRight: 0.2,
-    cheekSquintLeft: 0.15,
-    cheekSquintRight: 0.15,
-  },
-  C: {
-    ih: 1,
-    mouthFrownLeft: 0.2,
-    mouthFrownRight: 0.2,
-    mouthLowerDownLeft: 0.15,
-    mouthLowerDownRight: 0.15,
-    mouthSmileLeft: 0.1,
-    mouthSmileRight: 0.1,
-    cheekSquintLeft: 0.2,
-    cheekSquintRight: 0.2,
-  },
-  D: {
-    aa: 1,
-    jawForward: 1,
-    mouthRollLower: 0.1,
-    noseSneerLeft: 0.2,
-    noseSneerRight: 0.2,
-    cheekSquintLeft: 0.3,
-    cheekSquintRight: 0.3,
-  },
-  E: { oh: 1, jawForward: 1, jawOpen: 0.05, mouthRollLower: 0.1 },
-  F: {
-    ou: 1,
-    mouthPucker: 0.5,
-    mouthShrugLower: 1,
-    jawForward: 0.5,
-    jawOpen: 0.1,
-    cheekPuff: 0.05,
-  },
-  G: {
-    FF: 1,
-    cheekSquintLeft: 0.25,
-    cheekSquintRight: 0.25,
-    jawOpen: 0.1,
-    mouthRollLower: 0.6,
-    mouthShrugLower: 0.15,
-    mouthShrugUpper: 0.2,
-    noseSneerLeft: 0.3,
-    noseSneerRight: 0.3,
-  },
-  H: {
-    TH: 1,
-    ih: 0.5,
-    cheekSquintLeft: 0.2,
-    cheekSquintRight: 0.2,
-    mouthFrownLeft: 0.15,
-    mouthFrownRight: 0.15,
-    mouthLowerDownLeft: 0.15,
-    mouthLowerDownRight: 0.15,
-    mouthSmileLeft: 0.15,
-    mouthSmileRight: 0.15,
-  },
-}
+export type Cue = (typeof data.cues)[number]
 
-type Cue = { start: number; end: number; value: string }
-const timeline = cues as Cue[]
+export const VISEMES = data.visemes
 
-const REST: Record<string, number> = {}
-const MOUTH = [...new Set(Object.values(VISEMES).flatMap(Object.keys))]
+export const DURATION = data.cues[data.cues.length - 1].end
+
 const EYES = ['eyeBlinkLeft', 'eyeBlinkRight']
 
-let cursor = 0
+/** Half a crossfade — the ramp either side of every boundary. */
+const HALF = data.transitionMs / 2000
 
-function visemeAt(time: number) {
-  // Rewind when a new sprite jumps backwards in the sheet.
-  if (cursor >= timeline.length || time < timeline[cursor].start) cursor = 0
-  while (cursor < timeline.length && timeline[cursor].end <= time) cursor++
-
-  const cue = timeline[cursor]
-  return cue && time >= cue.start ? (VISEMES[cue.value] ?? REST) : REST
+type Span = {
+  v: number
+  amp: number
+  t0: number
+  t1: number
+  t2: number
+  t3: number
 }
 
-export type Face = {
+/** Adjacent cues naming the same shape are joined, or their shared boundary
+ * would ramp one out and the other in. */
+function spans(cues: Cue[]): Span[] {
+  const merged: Cue[] = []
+  for (const cue of cues) {
+    const prev = merged[merged.length - 1]
+    if (prev && prev.viseme === cue.viseme && prev.end >= cue.start - 1e-6) {
+      prev.end = cue.end
+      prev.amp = Math.max(prev.amp, cue.amp)
+    } else merged.push({ ...cue })
+  }
+
+  return merged.map(({ start, end, viseme, amp }) => {
+    const mid = (start + end) / 2
+    return {
+      v: VISEMES.indexOf(viseme),
+      amp: amp / data.scale,
+      // Too short for both ramps becomes a triangle, not a squashed trapezoid.
+      t0: start - HALF,
+      t1: Math.min(start + HALF, mid),
+      t2: Math.max(end - HALF, mid),
+      t3: end + HALF,
+    }
+  })
+}
+
+let SPANS = spans(data.cues)
+
+/** DEV(visemes): play an edited timeline in place of the shipped one. */
+export function recue(cues: Cue[]) {
+  SPANS = spans(cues)
+  cursor = 0 // it indexes the timeline that just went away
+}
+
+/** How fast the mouth closes when the audio stops mid-sprite. */
+const RELEASE = 14
+
+const weights = new Float32Array(VISEMES.length)
+let cursor = 0
+
+function height({ amp, t0, t1, t2, t3 }: Span, t: number) {
+  if (t <= t0 || t >= t3) return 0
+  if (t < t1) return (amp * (t - t0)) / (t1 - t0)
+  if (t <= t2) return amp
+  return (amp * (t3 - t)) / (t3 - t2)
+}
+
+/** Spans are ordered, so one cursor serves all fifteen visemes. */
+function sampleAt(time: number) {
+  while (cursor > 0 && time <= SPANS[cursor - 1].t3) cursor--
+  while (cursor < SPANS.length - 1 && time > SPANS[cursor].t3) cursor++
+
+  weights.fill(0)
+  for (let i = cursor; i < SPANS.length; i++) {
+    const span = SPANS[i]
+    if (span.t0 > time) break
+    // The louder of the two, never their sum.
+    weights[span.v] = Math.max(weights[span.v], height(span, time))
+  }
+
+  // Morph targets add, so weights past 1 break the mesh. Normalising keeps
+  // the mix; clipping would not.
+  let total = 0
+  for (const w of weights) total += w
+  if (total > 1) for (let v = 0; v < weights.length; v++) weights[v] /= total
+}
+
+type Face = {
   influences: number[]
-  mouth: [name: string, index: number][]
+  visemes: [track: number, index: number][]
   eyes: number[]
 }
 
-/** Index every morphable mesh under `root` once, ahead of the frame loop. */
 export function collectFaces(root: Object3D) {
   const faces: Face[] = []
 
@@ -107,7 +116,9 @@ export function collectFaces(root: Object3D) {
 
     faces.push({
       influences,
-      mouth: MOUTH.filter((n) => n in dict).map((n) => [n, dict[n]]),
+      visemes: VISEMES.flatMap((name, v) =>
+        name in dict ? [[v, dict[name]] as [number, number]] : [],
+      ),
       eyes: EYES.filter((n) => n in dict).map((n) => dict[n]),
     })
   })
@@ -115,36 +126,20 @@ export function collectFaces(root: Object3D) {
   return faces
 }
 
-const BLINK = 0.15 // seconds per close→open
-const gap = () => 2 + Math.random() * 3 // 2–5s between blinks
-
-/** Self-scheduling blink: feed elapsed seconds, get the eyelid weight (0→1→0). */
-export function makeBlink() {
-  let next = gap()
-  return (t: number) => {
-    const since = t - next
-    if (since > BLINK) next = t + gap()
-    return since > 0 && since < BLINK ? Math.sin((since / BLINK) * Math.PI) : 0
-  }
-}
-
-/** Ease the mouth toward the viseme at `time` (null = rest); set eyelids to `blink`. */
+/** `time` of null rests the mouth. */
 export function applyFace(
   faces: Face[],
   time: number | null,
   blink: number,
   delta: number,
 ) {
-  const weights = time === null ? REST : visemeAt(time)
+  if (time === null)
+    for (let v = 0; v < weights.length; v++)
+      weights[v] = MathUtils.damp(weights[v], 0, RELEASE, delta)
+  else sampleAt(time)
 
-  for (const { influences, mouth, eyes } of faces) {
-    for (const [name, i] of mouth)
-      influences[i] = MathUtils.damp(
-        influences[i],
-        weights[name] ?? 0,
-        20,
-        delta,
-      )
+  for (const { influences, visemes, eyes } of faces) {
+    for (const [v, i] of visemes) influences[i] = weights[v]
     for (const i of eyes) influences[i] = blink
   }
 }

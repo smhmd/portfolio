@@ -1,17 +1,22 @@
 import { Container } from 'src/components'
-import { generateMeta, iconToFavicon } from 'src/lib/server'
+import { generateHead } from 'src/lib/server'
 
 import { Hud } from './components/Hud'
 import { Splash } from './components/Splash'
 import { Stage } from './components/Stage'
+import { enter } from './lib/store'
 import { AppIcon, metadata } from './metadata'
+import styles from './styles.css?url'
 
-export function meta() {
-  return generateMeta(metadata)
-}
+export const { meta, links } = generateHead({
+  metadata,
+  icon: <AppIcon fill='transparent' padding={8} />,
+  styles,
+})
 
-export function links() {
-  return [iconToFavicon(<AppIcon fill='transparent' padding={8} />)]
+/** A loader, not an effect, so it runs before the first paint. */
+export function clientLoader() {
+  return enter()
 }
 
 export default function App() {

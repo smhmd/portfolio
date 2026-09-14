@@ -1,38 +1,85 @@
 import { useEffect } from 'react'
 
-import { type AnimationAction, type AnimationMixer, LoopOnce } from 'three'
+import {
+  AdditiveAnimationBlendMode,
+  type AnimationAction,
+  type AnimationMixer,
+  LoopOnce,
+} from 'three'
+
+import { GESTURE_FADE } from './common'
+import { dialogue, type NodeId } from './dialogue'
 
 /**
- * Idle runs forever as the base layer. Any other clip name plays once,
- * cross-faded in and out — standard "gesture over idle" setup.
+ * Idle is the base layer and never stops; a node's `animations` play once
+ * each on top of it. Additive clips add to idle, normal clips replace it —
+ * `owner` is the one action posing the body, which additive clips never are.
  */
 
 type Actions = Record<string, AnimationAction | null>
 
-const FADE = 0.4
+/** Also asked by Avatar's gaze: an additive gesture has no claim on the head. */
+export const isAdditive = (a: AnimationAction) =>
+  a.blendMode === AdditiveAnimationBlendMode
 
 export function useAnimate(
-  animation: string,
+  node: NodeId | null,
+  fresh: boolean,
   actions: Actions,
   mixer: AnimationMixer,
 ) {
   useEffect(() => {
     const idle = actions.idle
-    idle?.play() // no-op if already running
+    if (!node || !idle || !fresh) return
 
-    const clip = actions[animation]
-    if (!idle || !clip || clip === idle) return
+    const queue = (dialogue[node].animations ?? [])
+      .map((name) => actions[name])
+      .filter((a): a is AnimationAction => !!a && a !== idle)
+    if (!queue.length) return
 
-    clip.reset().setLoop(LoopOnce, 1).crossFadeFrom(idle, FADE, false).play()
-    clip.clampWhenFinished = true
+    let owner = idle
+    let at = -1
 
-    const toIdle = () =>
-      void idle.reset().crossFadeFrom(clip, FADE, false).play()
+    const enter = (a: AnimationAction) => {
+      a.reset().setLoop(LoopOnce, 1)
+      // Unclamped, a finished action is disabled outright and `leave` has
+      // nothing left to fade.
+      a.clampWhenFinished = true
 
-    mixer.addEventListener('finished', toIdle) // only the one-shot ever finishes
-    return () => {
-      mixer.removeEventListener('finished', toIdle)
-      toIdle()
+      if (isAdditive(a)) a.fadeIn(GESTURE_FADE)
+      else {
+        a.crossFadeFrom(owner, GESTURE_FADE, false)
+        owner = a
+      }
+      a.play()
     }
-  }, [animation, actions, mixer])
+
+    const leave = (a: AnimationAction) => {
+      if (isAdditive(a)) a.fadeOut(GESTURE_FADE)
+      else if (owner === a) {
+        idle.reset().crossFadeFrom(a, GESTURE_FADE, false).play()
+        owner = idle
+      }
+    }
+
+    // Normal-to-normal is left running, since `enter` crossfades from it.
+    const advance = () => {
+      const prev = queue[at]
+      const next = queue[++at]
+      if (prev && (isAdditive(prev) || !next || isAdditive(next))) leave(prev)
+      if (next) enter(next)
+    }
+
+    advance()
+
+    const finished = ({ action }: { action: AnimationAction }) =>
+      void (action === queue[at] && advance())
+
+    mixer.addEventListener('finished', finished)
+    return () => {
+      mixer.removeEventListener('finished', finished)
+      const current = queue[at]
+      if (current?.isRunning()) leave(current) // superseded mid-sequence
+    }
+  }, [node, fresh, actions, mixer])
 }

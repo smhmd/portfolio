@@ -1,39 +1,67 @@
+import { createRef } from 'react'
+
 import { createStore } from 'src/lib/react'
 
-import { dialogue, type NodeId } from './dialogue'
+import { type Choice, dialogue, type NodeId } from './dialogue'
 import { voice } from './voice'
 
 /**
- * The entire game state. `focus` is "what a click would do right now":
- * the node id the crosshair (or a tap) leads to, or null. Both the 3D
- * scene and the DOM HUD read from here; only Interact writes `focus`.
+ * `fresh`: the node is being performed, not merely shown.
+ * `ready`: the renderer is warm. Owned by Preload — `enter` must not touch
+ * it, or arriving on an already-mounted canvas strands the splash.
+ * `entered`: the entry camera flight has finished.
  */
 export const store = createStore({
-  node: 'start' as NodeId,
+  node: null as NodeId | null,
   speaking: false,
-  focus: null as NodeId | null,
+  fresh: false,
+  ready: false,
+  entered: false,
 })
 
-/** Jump to a node: play its audio, then follow `auto` when it ends. */
-function goto(id: NodeId) {
-  const line = dialogue[id]
-  store.set({ node: id, speaking: line.sprite != null, focus: null })
+/** Rows are real links, so they live in the DOM; Scene projects the position. */
+export const panel = createRef<HTMLDivElement>()
 
-  if (!line.sprite) return
-  voice.play(line.sprite, () => {
-    if (store.get().node !== id) return // superseded by a newer goto
+/**
+ * Pointer in NDC; 0,0 means nothing is being pointed at. Not r3f's
+ * `state.pointer`, which stops updating under the DOM rows.
+ */
+export const cursor = { x: 0, y: 0, onRow: false }
+
+/** Whether this session has been through the room before. */
+let visited = false
+
+/** The store outlives the route; these three flags belong to one visit. */
+export const enter = () => {
+  store.set({ entered: visited, fresh: false, speaking: false })
+  visited = true
+}
+
+/** Nodes already said out loud. */
+const heard = new Set<NodeId>()
+
+/** A node is performed once; revisiting shows it without replaying it. */
+function goto(target: NodeId) {
+  const line = dialogue[target]
+  const sprite = heard.has(target) ? undefined : line.sprite
+
+  store.set({ node: target, speaking: sprite != null, fresh: sprite != null })
+
+  if (!sprite) return void (line.auto && goto(line.auto))
+
+  heard.add(target)
+  voice.play(sprite, () => {
+    if (store.get().node !== target) return // superseded by a newer goto
     store.set({ speaking: false })
     if (line.auto) goto(line.auto)
   })
 }
 
-/** Cut the current line short and land where it would have. */
-function skip() {
-  if (!store.get().speaking) return
-  voice.stop()
-  const { auto } = dialogue[store.get().node]
-  if (auto) goto(auto)
-  else store.set({ speaking: false })
-}
+export const api = { goto }
 
-export const api = { goto, skip }
+export function useChoices(): Choice[] | null {
+  const { node, speaking } = store.use()
+
+  if (!node || speaking) return null
+  return dialogue[node].choices ?? null
+}
