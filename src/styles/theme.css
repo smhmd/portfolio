@@ -1,9 +1,12 @@
 @theme {
   --font-roboto: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  --font-unifraktur: 'UnifrakturCook', 'Old English Text MT', "Times New Roman", Times, serif;
+  --font-unifraktur:
+    'UnifrakturCook', 'Old English Text MT', 'Times New Roman', Times, serif;
   --font-orbitron: 'Orbitron', 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  --font-quicksand: 'Quicksand', 'Roboto', 'Helvetica', 'Arial', sans-serif, 'MusicFallback';
-  --font-josefin-slab: 'Josefin Slab', "Roboto Slab", "Rockwell", "Courier New", serif;
+  --font-quicksand:
+    'Quicksand', 'Roboto', 'Helvetica', 'Arial', sans-serif, 'MusicFallback';
+  --font-josefin-slab:
+    'Josefin Slab', 'Roboto Slab', 'Rockwell', 'Courier New', serif;
 
   --color-bsod: #0176e1;
   --color-bsod-classic: #0000a3;
@@ -50,4 +53,3 @@
   --animate-press: press 1s 0.2s ease-in-out infinite;
   --animate-change-background: change-background 3.9s -0.7s steps(1) infinite;
 }
-

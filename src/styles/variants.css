@@ -16,6 +16,12 @@
   }
 }
 
+@custom-variant act {
+  &:is(:hover, :focus-visible, :focus-within, :active) {
+    @slot;
+  }
+}
+
 @custom-variant l {
   @media (orientation: landscape) {
     @slot;
@@ -29,31 +35,31 @@
 }
 
 @custom-variant vsm {
-  @media (height >= 30rem) {
+  @media (height >=30rem) {
     @slot;
   }
 }
 
 @custom-variant vmd {
-  @media (height >= 45rem) {
+  @media (height >=45rem) {
     @slot;
   }
 }
 
 @custom-variant vlg {
-  @media (height >= 56rem) {
+  @media (height >=56rem) {
     @slot;
   }
 }
 
 @custom-variant vxl {
-  @media (height >= 68rem) {
+  @media (height >=68rem) {
     @slot;
   }
 }
 
 @custom-variant v2xl {
-  @media (height >= 90rem) {
+  @media (height >=90rem) {
     @slot;
   }
 }

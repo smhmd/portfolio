@@ -5,30 +5,21 @@
     height: 100%;
     margin: 0;
     overscroll-behavior: none;
-    user-select: none;
-    -webkit-user-select: none;
   }
 
   body {
     min-height: 100svh;
-    overflow-x: auto;
-    overflow-y: auto;
-  }
-
-  :root {
-    color-scheme: dark light;
-  }
-
-  body,
-  main {
     overflow: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
 
-  body::-webkit-scrollbar,
-  main::-webkit-scrollbar {
+  body::-webkit-scrollbar {
     display: none;
+  }
+
+  :root {
+    color-scheme: dark light;
   }
 
   * {
