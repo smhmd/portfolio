@@ -10,7 +10,7 @@ import {
   useLocation,
 } from 'react-router'
 
-import { Breakpoints, SVGDefs } from 'src/components'
+import { Breakpoints, BSOD, SVGDefs } from 'src/components'
 import { Providers } from 'src/contexts'
 import mainCSS from 'src/styles/main.css?url'
 
@@ -70,8 +70,6 @@ export default function App() {
   )
 }
 
-const BSOD = lazy(() => import('src/components/BSOD'))
-
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let e: ErrorResponse = {
     status: 499,
@@ -89,9 +87,5 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     }
   }
 
-  return (
-    <Suspense fallback={null}>
-      <BSOD error={e} />
-    </Suspense>
-  )
+  return <BSOD error={e} />
 }

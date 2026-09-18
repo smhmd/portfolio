@@ -8,7 +8,7 @@ type ErrorBoundaryProps = {
   error: ErrorResponse
 }
 
-function BSOD({ error }: ErrorBoundaryProps) {
+export function BSOD({ error }: ErrorBoundaryProps) {
   function handleCopy(e: React.MouseEvent<HTMLElement, MouseEvent>) {
     navigator.clipboard.writeText(e.currentTarget.innerText)
   }
@@ -18,7 +18,7 @@ function BSOD({ error }: ErrorBoundaryProps) {
       role='alert'
       aria-labelledby='error-heading'
       className={clsx(
-        'h-svh bg-purple-700 font-sans font-normal text-white',
+        'h-svh bg-sky-700 font-sans font-normal text-white',
         'flex items-center justify-center',
       )}>
       <div
@@ -98,5 +98,3 @@ function BSOD({ error }: ErrorBoundaryProps) {
     </main>
   )
 }
-
-export default BSOD

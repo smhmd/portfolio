@@ -2,8 +2,8 @@ export const SHOW_APP_DRAWER = true
 export const SHOW_TAILWIND_BREAKPOINTS = import.meta.env.DEV && false
 
 export const DOMAIN = `https://smhmd.dev`
-export const GITHUB_REPO = `smhmd/portfolio`
-export const REPO_LINK = `https://github.com/${GITHUB_REPO}`
+export const GITHUB_REPO = `smhmd/smhmd`
+export const REPO_LINK = `https://github.com/${GITHUB_REPO}/`
 
 export const SITE = {
   name: `Simo`,
